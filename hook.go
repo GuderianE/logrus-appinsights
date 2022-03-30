@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/microsoft/ApplicationInsights-Go/appinsights"
+	"github.com/microsoft/ApplicationInsights-Go/appinsights/contracts"
 	"github.com/sirupsen/logrus"
 )
 
@@ -16,7 +17,7 @@ var defaultLevels = []logrus.Level{
 	logrus.InfoLevel,
 }
 
-var levelMap = map[logrus.Level]appinsights.SeverityLevel{
+var levelMap = map[logrus.Level]contracts.SeverityLevel{
 	logrus.PanicLevel: appinsights.Critical,
 	logrus.FatalLevel: appinsights.Critical,
 	logrus.ErrorLevel: appinsights.Error,
@@ -147,10 +148,12 @@ func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.Trace
 			v = formatData(v) // use default formatter
 		}
 		vStr := fmt.Sprintf("%v", v)
-		trace.SetProperty(k, vStr)
+		trace.Properties = map[string]string{
+			k: vStr,
+		}
 	}
-	trace.SetProperty("source_level", entry.Level.String())
-	trace.SetProperty("source_timestamp", entry.Time.String())
+	trace.Properties = map[string]string{"source_level": entry.Level.String()}
+	trace.Properties = map[string]string{"source_timestamp": entry.Time.String()}
 	return trace, nil
 }
 
