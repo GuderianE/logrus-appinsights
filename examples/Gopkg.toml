@@ -26,7 +26,7 @@
 
 
 [[constraint]]
-  name = "github.com/jjcollinge/logrus-appinsights"
+  name = "github.com/guderiane/logrus-appinsights"
   revision = "66656fe507b3cd8536c90c876902af486c828192"
 
 [[constraint]]
