@@ -8,7 +8,7 @@
 ## Disclaimer
 This is not my original work I forked it because the original project hasn't been updated in a long time and since it wasn't working and I needed it, so I fixed it.
 
-The original can be found here github.com/jjcollinge/logrus-appinsights
+The original can be found here http://github.com/jjcollinge/logrus-appinsights
 
 ## Usage
 
