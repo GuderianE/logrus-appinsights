@@ -5,9 +5,13 @@
 
 # Application Insights Hook for Logrus <img src="http://i.imgur.com/hTeVwmJ.png" width="40" height="40" alt=":walrus:" class="emoji" title=":walrus:"/>
 
+## Disclaimer
+This is not my original work I forked it because the original project hasn't been updated in a long time and since it wasn't working and I needed it, so I fixed it.
+
+The original can be found here github.com/jjcollinge/logrus-appinsights
+
 ## Usage
 
-See examples folder.
 
 ```go
 package main
