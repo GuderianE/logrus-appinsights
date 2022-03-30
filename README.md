@@ -19,7 +19,7 @@ package main
 import (
 	"time"
 
-	"github.com/jjcollinge/logrus-appinsights"
+	"github.com/guderiane/logrus-appinsights"
 	log "github.com/sirupsen/logrus"
 )
 
