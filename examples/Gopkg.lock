@@ -13,7 +13,7 @@
   revision = "98ac7ca026c26818888600ea0d966987aa56f043"
 
 [[projects]]
-  name = "github.com/jjcollinge/logrus-appinsights"
+  name = "github.com/guderiane/logrus-appinsights"
   packages = ["."]
   revision = "66656fe507b3cd8536c90c876902af486c828192"
 
