@@ -148,12 +148,10 @@ func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.Trace
 			v = formatData(v) // use default formatter
 		}
 		vStr := fmt.Sprintf("%v", v)
-		trace.Properties = map[string]string{
-			k: vStr,
-		}
+		trace.Properties[k] = vStr
 	}
-	trace.Properties = map[string]string{"source_level": entry.Level.String()}
-	trace.Properties = map[string]string{"source_timestamp": entry.Time.String()}
+	trace.Properties["source_level"] = entry.Level.String()
+	trace.Properties["source_timestamp"] = entry.Time.String()
 	return trace, nil
 }
 
