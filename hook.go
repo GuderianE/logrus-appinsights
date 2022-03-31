@@ -144,8 +144,7 @@ func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.Trace
 		if errData, isError := v.(error); logrus.ErrorKey == k && v != nil && isError {
 			trace.Properties[k] = errData.Error()
 		} else {
-			formattedV := formatData(v)
-			stringV := fmt.Sprintf("%v", formattedV)
+			stringV := fmt.Sprintf("%v", v)
 			trace.Properties[k] = stringV
 		}
 		if _, ok := hook.ignoreFields[k]; ok {
