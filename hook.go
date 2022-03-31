@@ -131,8 +131,8 @@ func (hook *AppInsightsHook) fire(entry *logrus.Entry) error {
 func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.TraceTelemetry, error) {
 	// Add the message as a field if it isn't already
 
-	if _, ok := entry.Data["message"]; !ok {
-		entry.Data["message"] = entry.Message
+	if _, ok := entry.Data["msg"]; !ok {
+		entry.Data["msg"] = entry.Message
 	}
 
 	level := levelMap[entry.Level]
@@ -148,19 +148,18 @@ func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.Trace
 			stringV := fmt.Sprintf("%v", formattedV)
 			trace.Properties[k] = stringV
 		}
+		if _, ok := hook.ignoreFields[k]; ok {
+			continue
+		}
+		if fn, ok := hook.filters[k]; ok {
+			v = fn(v) // apply custom filter
+		} else {
+			v = formatData(v) // use default formatter
+		}
+		vStr := fmt.Sprintf("%v", v)
+		trace.Properties[k] = vStr
 	}
-	// for k, v := range entry.Data {
-	// 	if _, ok := hook.ignoreFields[k]; ok {
-	// 		continue
-	// 	}
-	// 	if fn, ok := hook.filters[k]; ok {
-	// 		v = fn(v) // apply custom filter
-	// 	} else {
-	// 		v = formatData(v) // use default formatter
-	// 	}
-	// 	vStr := fmt.Sprintf("%v", v)
-	// 	trace.Properties[k] = vStr
-	// }
+
 	trace.Properties["source_level"] = entry.Level.String()
 	return trace, nil
 }
