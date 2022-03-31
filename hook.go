@@ -161,6 +161,9 @@ func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.Trace
 	}
 
 	trace.Properties["source_level"] = entry.Level.String()
+	trace.Properties["line"] = fmt.Sprintf("%v", entry.Caller.Line)
+	trace.Properties["function"] = fmt.Sprintf("%v", entry.Caller.Function)
+	trace.Properties["service"] = fmt.Sprintf("%v", entry.Data["service"])
 	return trace, nil
 }
 
