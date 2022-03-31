@@ -151,7 +151,6 @@ func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.Trace
 		trace.Properties[k] = vStr
 	}
 	trace.Properties["source_level"] = entry.Level.String()
-	trace.Properties["source_timestamp"] = entry.Time.String()
 	return trace, nil
 }
 
