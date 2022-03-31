@@ -110,6 +110,7 @@ func (hook *AppInsightsHook) AddFilter(name string, fn func(interface{}) interfa
 
 // Fire is invoked by logrus and sends log data to Application Insights.
 func (hook *AppInsightsHook) Fire(entry *logrus.Entry) error {
+
 	if !hook.async {
 		return hook.fire(entry)
 	}
@@ -129,6 +130,7 @@ func (hook *AppInsightsHook) fire(entry *logrus.Entry) error {
 
 func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.TraceTelemetry, error) {
 	// Add the message as a field if it isn't already
+
 	if _, ok := entry.Data["message"]; !ok {
 		entry.Data["message"] = entry.Message
 	}
@@ -139,21 +141,27 @@ func (hook *AppInsightsHook) buildTrace(entry *logrus.Entry) (*appinsights.Trace
 		return nil, fmt.Errorf("Could not create telemetry trace with entry %+v", entry)
 	}
 	for k, v := range entry.Data {
-		if _, ok := hook.ignoreFields[k]; ok {
-			continue
-		}
-		if fn, ok := hook.filters[k]; ok {
-			v = fn(v) // apply custom filter
+		if errData, isError := v.(error); logrus.ErrorKey == k && v != nil && isError {
+			trace.Properties[k] = errData.Error()
 		} else {
-			v = formatData(v) // use default formatter
-		}
-		vStr := fmt.Sprintf("%v", v)
-		trace.Properties = map[string]string{
-			k: vStr,
+			formattedV := formatData(v)
+			stringV := fmt.Sprintf("%v", formattedV)
+			trace.Properties[k] = stringV
 		}
 	}
-	trace.Properties = map[string]string{"source_level": entry.Level.String()}
-	trace.Properties = map[string]string{"source_timestamp": entry.Time.String()}
+	// for k, v := range entry.Data {
+	// 	if _, ok := hook.ignoreFields[k]; ok {
+	// 		continue
+	// 	}
+	// 	if fn, ok := hook.filters[k]; ok {
+	// 		v = fn(v) // apply custom filter
+	// 	} else {
+	// 		v = formatData(v) // use default formatter
+	// 	}
+	// 	vStr := fmt.Sprintf("%v", v)
+	// 	trace.Properties[k] = vStr
+	// }
+	trace.Properties["source_level"] = entry.Level.String()
 	return trace, nil
 }
 
